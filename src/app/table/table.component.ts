@@ -1,11 +1,21 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [MatTableModule, MatSortModule],
+  imports: [
+    MatTableModule, 
+    MatSortModule, 
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatFormFieldModule
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
@@ -30,6 +40,11 @@ export class TableComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = filterValue;
   }
 
 }
