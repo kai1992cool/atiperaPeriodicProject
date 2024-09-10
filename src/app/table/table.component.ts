@@ -4,6 +4,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { debounceTime, Subject } from 'rxjs';
 
 
 @Component({
@@ -22,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 export class TableComponent implements AfterViewInit{
   
   @ViewChild(MatSort) sort!: MatSort;
+  private searchSubject = new Subject<string>();
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
 
@@ -39,12 +41,20 @@ export class TableComponent implements AfterViewInit{
   ]);
 
   ngAfterViewInit(): void {
+    
     this.dataSource.sort = this.sort;
+
+    this.searchSubject.pipe(
+      debounceTime(2000) 
+    ).subscribe(filterValue => {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    });
+
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.dataSource.filter = filterValue;
+    this.searchSubject.next(filterValue);
   }
 
 }

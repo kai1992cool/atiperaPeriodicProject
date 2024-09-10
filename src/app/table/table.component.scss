@@ -1,9 +1,12 @@
 .background {
     height: 100%;
     width: 100%;
-    padding: 20px;
     background: #161215;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
 }
 table {
-    width: 20%;
+    min-width: 80%;
   }
