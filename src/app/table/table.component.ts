@@ -1,4 +1,4 @@
-import { afterNextRender, AfterViewInit, Component, ViewChild } from '@angular/core';
+import { afterNextRender, AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -30,7 +30,7 @@ import { PeriodicElement } from '../shared/interfaces/periodic-element';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
-export class TableComponent implements AfterViewInit{
+export class TableComponent implements AfterViewInit {
   
   @ViewChild(MatSort) sort!: MatSort;
   private searchSubject = new Subject<string>();
@@ -38,14 +38,15 @@ export class TableComponent implements AfterViewInit{
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol','actions'];
 
   tabelData = new MatTableDataSource<PeriodicElement>([]);
-  isLoading = true;
+  isLoading = false;
   
   constructor(
     public dialog: MatDialog,
-    private fetchTableDataService: FetchTableDataService
+    private fetchTableDataService: FetchTableDataService,
+    private cdr: ChangeDetectorRef,
   ) {
     afterNextRender(() => {
-
+      this.isLoading = true;
       this.fetchTableDataService.getTableElements().subscribe({
           next: (data) => {
             // Set loading state if needed
@@ -53,6 +54,8 @@ export class TableComponent implements AfterViewInit{
               this.tabelData.data = [...data];
               this.tabelData.sort = this.sort;
               this.isLoading = false;
+              console.log(data, this.isLoading);
+              this.cdr.detectChanges();
             }, 1000); // Delay data assignment
           },
           error: (error: any) => {

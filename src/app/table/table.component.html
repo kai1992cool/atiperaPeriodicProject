@@ -1,4 +1,5 @@
 <div class="background">
+  @defer() {
     @if (!this.isLoading) {
     <mat-form-field appearance="outline">
         <mat-label>Search...</mat-label>
@@ -44,6 +45,10 @@
       <mat-spinner></mat-spinner>
     </div>
   }
-  
+} @placeholder (minimum 1000ms) {
+  <div class="spinnerContainer">
+    <mat-spinner></mat-spinner>
+  </div>
+}
  
 </div>
