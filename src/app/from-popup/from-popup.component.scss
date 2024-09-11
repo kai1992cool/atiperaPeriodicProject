@@ -13,17 +13,28 @@
 
     >.popupWindow {
         border-radius: 20px;
-        background: linear-gradient(225deg, #333132da, #575758de);
-        padding: 10px 20px;
+        background: linear-gradient(225deg, #331738, #251a23);
+        padding: 25px 35px;    
         min-width: 20%;
         min-height: 20%;
 
         .popupHeader {
             color: white;
-            position: relative;
-
-            h1 {
-                flex-grow: 1;
+            text-align: center;
+            
+        }
+        >form {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            >.buttons {
+                display: flex;
+                justify-content: space-between;
+                >button {
+                    flex:1;
+                    margin: 5px;
+                }
             }
         }
     }

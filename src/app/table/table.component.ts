@@ -37,7 +37,8 @@ export class TableComponent implements AfterViewInit{
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol','actions'];
 
-  dataSource = new MatTableDataSource<PeriodicElement>();
+  tabelData = new MatTableDataSource<PeriodicElement>([]);
+  isLoading = true;
   
   constructor(
     public dialog: MatDialog,
@@ -45,23 +46,25 @@ export class TableComponent implements AfterViewInit{
   ) {}
 
   ngOnInit() {
-    setTimeout(() => { 
-      console.log('aaaaaaa')
-      this.fetchTableDataService.getTableElements().subscribe({
-        next: (data) => {
-          this.dataSource.data = [...data]; 
-          this.dataSource.sort = this.sort;
-        }
-      });
-    },2000)
+    this.fetchTableDataService.getTableElements().subscribe({
+      next: (data) => {
+        this.tabelData.data = [...data]; 
+        this.tabelData.sort = this.sort;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+        this.isLoading = false; 
+      }
+    });
   }
 
   ngAfterViewInit(): void {
-
+    
     this.searchSubject.pipe(
       debounceTime(2000) 
     ).subscribe(filterValue => {
-      this.dataSource.filter = filterValue.trim().toLowerCase();
+      this.tabelData.filter = filterValue.trim().toLowerCase();
     });
 
   }
@@ -79,11 +82,11 @@ export class TableComponent implements AfterViewInit{
   }
 
   updateRowData(updatedRow: any): void {
-    const index = this.dataSource.data.findIndex(row => row.position === updatedRow.position);
+    const index = this.tabelData.data.findIndex(row => row.position === updatedRow.position);
     if (index !== -1) {
-      const updatedData = [...this.dataSource.data];
+      const updatedData = [...this.tabelData.data];
       updatedData[index] = updatedRow;
-      this.dataSource.data = updatedData;
+      this.tabelData.data = updatedData;
     }
   }
 

@@ -8,6 +8,11 @@
     >mat-form-field {
         padding: 20px;
     }
+    > .spinnerContainer {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
 }
 table {
     min-width: 80%;
