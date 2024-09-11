@@ -1,10 +1,15 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime, Subject } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FromPopupComponent } from '../from-popup/from-popup.component';
+
 
 
 @Component({
@@ -15,7 +20,10 @@ import { debounceTime, Subject } from 'rxjs';
     MatSortModule, 
     MatProgressSpinnerModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
@@ -25,7 +33,7 @@ export class TableComponent implements AfterViewInit{
   @ViewChild(MatSort) sort!: MatSort;
   private searchSubject = new Subject<string>();
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol','actions'];
 
   dataSource = new MatTableDataSource([
     { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
@@ -39,9 +47,11 @@ export class TableComponent implements AfterViewInit{
     { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
     { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
   ]);
+  
+  constructor(public dialog: MatDialog) {}
 
   ngAfterViewInit(): void {
-    
+
     this.dataSource.sort = this.sort;
 
     this.searchSubject.pipe(
@@ -50,6 +60,27 @@ export class TableComponent implements AfterViewInit{
       this.dataSource.filter = filterValue.trim().toLowerCase();
     });
 
+  }
+
+  openEditDialog(element: any): void {
+    const dialogRef = this.dialog.open(FromPopupComponent, {
+      data: { ...element } 
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateRowData(result);
+      }
+    });
+  }
+
+  updateRowData(updatedRow: any): void {
+    const index = this.dataSource.data.findIndex(row => row.position === updatedRow.position);
+    if (index !== -1) {
+      const updatedData = [...this.dataSource.data];
+      updatedData[index] = updatedRow;
+      this.dataSource.data = updatedData;
+    }
   }
 
   applyFilter(event: Event) {

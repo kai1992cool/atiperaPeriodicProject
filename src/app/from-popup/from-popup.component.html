@@ -1,1 +1,27 @@
-<p>from-popup works!</p>
+<div class="popupMode">
+    <div class="popupWindow">
+      <div class="popupHeader">
+        <h2>Edit {{data.name}}</h2>
+      </div>
+  
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Weight</mat-label>
+        <input matInput>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Symbol</mat-label>
+        <input matInput>
+      </mat-form-field>
+  
+      <div>
+        <button mat-flat-button color="primary" (click)="save()">Save</button>
+        <button mat-flat-button (click)="onNoClick()">Cancel</button>
+      </div>
+    </div>
+  </div>
