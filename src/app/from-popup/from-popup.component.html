@@ -1,27 +1,54 @@
 <div class="popupMode">
     <div class="popupWindow">
       <div class="popupHeader">
-        <h2>Edit {{data.name}}</h2>
+        <h2>Editing {{data.name}}</h2>
       </div>
-  
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <mat-label>Weight</mat-label>
-        <input matInput>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <mat-label>Symbol</mat-label>
-        <input matInput>
-      </mat-form-field>
-  
-      <div>
-        <button mat-flat-button color="primary" (click)="save()">Save</button>
-        <button mat-flat-button (click)="onNoClick()">Cancel</button>
-      </div>
+      <form [formGroup]="form">
+
+        <mat-form-field>
+            <mat-label>Number</mat-label>
+            <input matInput formControlName="position">
+            @if(form.get('position')?.invalid && form.get('position')?.touched) {
+                <mat-error>
+                    Number is required.
+                </mat-error>
+            }
+        </mat-form-field>
+    
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+            @if (form.get('name')?.invalid && form.get('name')?.touched) {
+                <mat-error>
+                  Name is required.
+                </mat-error>
+            }
+        </mat-form-field>
+    
+        <mat-form-field>
+            <mat-label>Weight</mat-label>
+            <input matInput formControlName="weight">
+            @if( form.get('weight')?.invalid && form.get('weight')?.touched) {
+                <mat-error>
+                    Weight must be a positive number.
+                </mat-error>
+            }
+        </mat-form-field>
+    
+        <mat-form-field>
+            <mat-label>Symbol</mat-label>
+            <input matInput formControlName="symbol">
+            @if (form.get('symbol')?.invalid && form.get('symbol')?.touched) {
+                <mat-error>
+                  Symbol is required.
+                </mat-error>
+              }
+        </mat-form-field>
+    
+        <div>
+            <button mat-flat-button (click)="onNoClick()">Cancel</button>
+            <button mat-flat-button (click)="save()" [disabled]="form.invalid">Save</button>
+        </div>
+      </form>
     </div>
   </div>
